@@ -1,0 +1,123 @@
+import React from 'react';
+import { ArrowDownUp, AlertCircle, Settings } from 'lucide-react';
+import { CurrencyInput } from './CurrencyInput';
+import { SwapButton } from './SwapButton';
+import { formatTokenAmount } from '../utils/formatters';
+import { SWAP_CONFIG } from '../data/mock';
+
+interface SwapInterfaceProps {
+  fromAsset: string;
+  toAsset: string;
+  fromAmount: string;
+  toAmount: string;
+  fromUsdValue: string;
+  toUsdValue: string;
+  exchangeRate: number;
+  fromBalance: number;
+  postSwapBalance: number | null;
+  totalFeeUsd: number;
+  isSwapping: boolean;
+  isInvalid: boolean;
+  buttonText: string;
+  error: string | null;
+  handleFromAmountChange: (val: string) => void;
+  handleMax: () => void;
+  handleSwapAssets: () => void;
+  openModal: (side: 'from' | 'to') => void;
+  onConfirmSwap: (e?: React.FormEvent) => void;
+}
+
+export const SwapInterface: React.FC<SwapInterfaceProps> = ({
+  fromAsset,
+  toAsset,
+  fromAmount,
+  toAmount,
+  fromUsdValue,
+  toUsdValue,
+  exchangeRate,
+  fromBalance,
+  postSwapBalance,
+  totalFeeUsd,
+  isSwapping,
+  isInvalid,
+  buttonText,
+  error,
+  handleFromAmountChange,
+  handleMax,
+  handleSwapAssets,
+  openModal,
+  onConfirmSwap
+}) => {
+  return (
+    <div className="bg-brand-border/20 backdrop-blur-2xl border border-brand-border/60 rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-8 shadow-2xl relative overflow-hidden group">
+      <div className="flex justify-between items-center mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl font-black font-display tracking-tight text-white leading-none">Swap Assets</h2>
+        <div className="flex gap-2">
+          <div className="px-3 py-1.5 bg-brand-primary/10 text-brand-primary text-[10px] uppercase font-bold tracking-widest rounded-full border border-brand-primary/20">{SWAP_CONFIG.DEFAULT_SLIPPAGE} Slippage</div>
+        </div>
+      </div>
+
+      {error && (
+        <div className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center gap-3 text-red-500 text-sm animate-in fade-in slide-in-from-top-2">
+          <AlertCircle className="w-5 h-5 shrink-0" />
+          <span className="font-medium">{error}</span>
+        </div>
+      )}
+
+      <form onSubmit={onConfirmSwap} className="space-y-2">
+        <CurrencyInput
+          label="From"
+          amount={fromAmount}
+          onAmountChange={handleFromAmountChange}
+          asset={fromAsset}
+          onAssetClick={() => openModal('from')}
+          usdValue={fromUsdValue}
+          balance={formatTokenAmount(fromBalance)}
+          postBalance={postSwapBalance !== null ? formatTokenAmount(postSwapBalance) : undefined}
+          onMaxClick={handleMax}
+          disabled={isSwapping}
+        />
+
+        <div className="relative h-4 flex justify-center items-center">
+          <div className="absolute inset-x-0 h-px bg-brand-border" />
+          <button
+            type="button"
+            onClick={handleSwapAssets}
+            disabled={isSwapping}
+            className="relative p-3 bg-brand-bg border border-brand-border rounded-full hover:border-brand-primary transition-all z-10 hover:rotate-180 duration-500 shadow-xl disabled:opacity-50 group"
+          >
+            <ArrowDownUp className="w-5 h-5 text-brand-primary" />
+          </button>
+        </div>
+
+        <CurrencyInput
+          label="To"
+          amount={toAmount}
+          asset={toAsset}
+          onAssetClick={() => openModal('to')}
+          usdValue={toUsdValue}
+          rateInfo={`1 ${fromAsset} = ${formatTokenAmount(exchangeRate)} ${toAsset}`}
+          readOnly
+          disabled={isSwapping}
+        />
+
+        <div className="px-2 h-14 flex flex-col justify-center gap-1 group/fee">
+          <div className="flex justify-between text-xs text-brand-secondary font-bold group-hover/fee:text-brand-text transition-colors">
+            <span className="flex items-center gap-1">Estimated Fee <Settings className="w-3 h-3" /></span>
+            <span>~${totalFeeUsd.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between text-xs text-brand-secondary font-bold group-hover/fee:text-brand-text transition-colors">
+            <span>Routing</span>
+            <span className="text-brand-primary">{SWAP_CONFIG.ROUTING_NETWORK}</span>
+          </div>
+        </div>
+
+        <SwapButton 
+          loading={isSwapping} 
+          disabled={isInvalid} 
+          text={buttonText}
+        />
+      </form>
+    </div>
+  );
+};
