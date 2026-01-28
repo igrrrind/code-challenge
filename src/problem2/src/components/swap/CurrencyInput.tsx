@@ -15,6 +15,11 @@ interface CurrencyInputProps {
   onMaxClick?: () => void;
 }
 
+/**
+ * CurrencyInput
+ * - Reusable input for token amounts with asset selector, balance, and rate info.
+ * - Sections: Label / balance, Input + asset selector, USD preview.
+ */
 export const CurrencyInput = ({ 
   label, 
   amount, 
@@ -31,6 +36,7 @@ export const CurrencyInput = ({
 }: CurrencyInputProps ) => {
   return (
     <div className="bg-brand-bg/40 border border-brand-border p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl focus-within:border-brand-primary/50 transition-all hover:border-brand-border/80">
+      {/* Top row: label and small balance / rate */}
       <div className="flex justify-between items-center mb-1.5 sm:mb-2 gap-2 h-5">
         <label className="text-[10px] sm:text-xs font-bold text-brand-secondary tracking-widest uppercase shrink-0">{label}</label>
         <div className="flex flex-col items-end overflow-hidden h-full justify-center">
@@ -65,6 +71,8 @@ export const CurrencyInput = ({
           )}
         </div>
       </div>
+
+      {/* Main input row */}
       <div className="flex items-center gap-3">
         <input
           type="text"
@@ -84,6 +92,8 @@ export const CurrencyInput = ({
           />
         </div>
       </div>
+
+      {/* USD preview */}
       <div className="mt-1 text-xs text-brand-secondary font-bold">
         <span className="truncate">{usdValue ? `≈ $${usdValue}` : '$0.00'}</span>
       </div>

@@ -1,6 +1,6 @@
 import { ChevronDown } from "lucide-react";
 import { cn } from "../../utils";
-import { ICON_BASE_URL } from "../../data/mock";
+import { ICON_BASE_URL, FALLBACK_TOKEN_ICON } from "../../common/constants";
 
 interface TokenSelectorProps {
   asset: string;
@@ -8,6 +8,10 @@ interface TokenSelectorProps {
   disabled?: boolean;
 }
 
+/**
+ * TokenSelector
+ * - Small button showing token icon and label; opens token selection modal.
+ */
 export const TokenSelector = ({ asset, onClick, disabled }: TokenSelectorProps) => (
   <button
     type="button"
@@ -18,15 +22,17 @@ export const TokenSelector = ({ asset, onClick, disabled }: TokenSelectorProps) 
       disabled && "opacity-50 cursor-not-allowed"
     )}
   >
+    {/* Token image */}
     <img
       src={`${ICON_BASE_URL}/${asset}.svg`}
       alt={asset}
       className="w-4 h-4 sm:w-6 sm:h-6 rounded-full shadow-lg shrink-0"
       onError={(e: React.SyntheticEvent<HTMLImageElement>) => { 
         const target = e.target as HTMLImageElement;
-        target.src = 'https://raw.githubusercontent.com/Switcheo/token-icons/main/tokens/SWTH.svg';
+        target.src = FALLBACK_TOKEN_ICON;
       }}
     />
+    {/* Token label & chevron */}
     <span className="font-bold text-white text-xs sm:text-base group-hover:text-brand-primary transition-colors">{asset}</span>
     <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-brand-secondary group-hover:text-brand-primary transition-colors shrink-0" />
   </button>

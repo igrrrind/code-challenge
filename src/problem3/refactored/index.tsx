@@ -1,7 +1,18 @@
 import Decimal from "decimal.js";
 
+enum BlockchainEnum {
+  OSMOSIS = "Osmosis",
+  ETHEREUM = "Ethereum",
+  ARBITRUM = "Arbitrum",
+  ZILLIQA = "Zilliqa",
+  NEO = "Neo",
+}
+
+const MISSING_PRIORITY = -99;
+
+
 interface WalletBalance {
-  blockchain: string;
+  blockchain: BlockchainEnum;
   currency: string;
   amount: number;
 }
@@ -11,27 +22,31 @@ interface FormattedWalletBalance extends WalletBalance {
   usdValue: number;
 }
 
-const BLOCKCHAIN_PRIORITY: Record<string, number> = {
-  Osmosis: 100,
-  Ethereum: 50,
-  Arbitrum: 30,
-  Zilliqa: 20,
-  Neo: 20,
+const BLOCKCHAIN_PRIORITY: Record<BlockchainEnum, number> = {
+  [BlockchainEnum.OSMOSIS]: 100,
+  [BlockchainEnum.ETHEREUM]: 50,
+  [BlockchainEnum.ARBITRUM]: 30,
+  [BlockchainEnum.ZILLIQA]: 20,
+  [BlockchainEnum.NEO]: 20,
 };
 
-const getPriority = (chain: string) => BLOCKCHAIN_PRIORITY[chain] ?? -99;
+const getPriority = (chain: BlockchainEnum): number => BLOCKCHAIN_PRIORITY[chain] ?? MISSING_PRIORITY;
 
-interface Props extends BoxProps {}
+const WalletRowMemo = React.memo(WalletRow); //memoized to prevent rerender
 
-const WalletRowMemo = React.memo(WalletRow);
-
-const WalletPage: React.FC<Props> = (props: Props) => {
+export const WalletPage: React.FC<Props> = (props: Props) => {
   const { children, ...rest } = props;
   const balances = useWalletBalances();
   const prices = usePrices();
 
+  //handle loading state
+  if (!balances || !prices) {
+    return <div {...rest}>Loading assets...</div>;
+  }
+
   const sortedBalances = useMemo(() => {
     return balances
+      .filter((balance) => getPriority(balance.blockchain) > MISSING_PRIORITY && balance.amount > 0 )
       .map((balance) => ({
         ...balance,
         priority: getPriority(balance.blockchain),
@@ -40,7 +55,10 @@ const WalletPage: React.FC<Props> = (props: Props) => {
       .map(({ priority, ...balance }) => balance);
   }, [balances]);
 
-  const formattedBalances: FormattedWalletBalance[] = useMemo(() => { //prevents rerenders
+  const formattedBalances: FormattedWalletBalance[] = useMemo(() => {
+    //defensive check for prices object
+    if (!prices) return [];
+
     return sortedBalances.map((balance) => ({
       ...balance,
       formatted: balance.amount.toLocaleString("en-US", {
@@ -49,7 +67,7 @@ const WalletPage: React.FC<Props> = (props: Props) => {
       }) + ` ${balance.currency}`,
       usdValue: Number(
         new Decimal(balance.amount)
-          .mul(prices[balance.currency] ?? 0)
+          .mul(prices[balance.currency] ?? 0) 
           .toFixed(8)
       ),
     }));
@@ -57,7 +75,7 @@ const WalletPage: React.FC<Props> = (props: Props) => {
 
   const rows = useMemo(() => {
     return formattedBalances.map((balance: FormattedWalletBalance) => (
-      <WalletRow
+      <WalletRowMemo
         className={classes.row}
         key={`${balance.blockchain}-${balance.currency}`} //better key for uniqueness
         amount={balance.amount}
@@ -66,6 +84,11 @@ const WalletPage: React.FC<Props> = (props: Props) => {
       />
     ));
   }, [formattedBalances, classes.row]);
+
+  //handle empty state
+  if (rows.length === 0) {
+    return <div {...rest}>No balances found.</div>;
+  }
 
   return <div {...rest}>{rows}</div>;
 };

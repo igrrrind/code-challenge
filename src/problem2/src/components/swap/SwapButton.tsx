@@ -1,11 +1,17 @@
 import { Loader2 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { APP_MESSAGES } from '../../common/messages/text.messages';
 
+// Utility: combine clsx + tailwind-merge for class composition
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * SwapButton
+ * - Primary CTA for submitting the swap. Handles loading and disabled states.
+ */
 interface SwapButtonProps {
   loading: boolean;
   disabled: boolean;
@@ -25,11 +31,12 @@ export const SwapButton = ({ loading, disabled, onClick, text = "CONFIRM SWAP" }
         "disabled:bg-brand-border/60 disabled:text-brand-secondary/40 disabled:shadow-none disabled:active:scale-100 disabled:hover:scale-100 disabled:cursor-not-allowed"
       )}
     >
+      {/* Loading vs default label */}
       <div className="relative h-full w-full flex items-center justify-center pointer-events-none uppercase">
         {loading ? (
           <div className="flex items-center gap-3 animate-in fade-in zoom-in-95">
             <Loader2 className="w-5 h-5 animate-spin" />
-            <span className="opacity-80">Finalizing...</span>
+            <span className="opacity-80">{APP_MESSAGES.SWAP.BUTTON_FINALIZING}</span>
           </div>
         ) : (
           <span className="animate-in fade-in slide-in-from-bottom-1 duration-300">

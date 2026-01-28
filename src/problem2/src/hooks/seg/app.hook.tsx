@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
-import { usePrices } from '../usePrices';
+import { usePrices } from '../../api/hooks/prices.hook';
 import { formatCurrency, formatTokenAmount } from '../../utils/formatters';
-import { SWAP_CONFIG } from '../../data/mock';
+import { SWAP_CONFIG } from '../../common/config';
+import { APP_MESSAGES } from '../../common/messages/text.messages';
 import { useBalances } from '../../context/BalanceContext';
 
 /**
@@ -195,10 +196,10 @@ export const useAppLogic = () => {
    * Dynamic button text feedback for the user
    */
   const getButtonText = () => {
-    if (fromAsset === toAsset) return 'Select different tokens';
-    if (!fromAmount || parseFloat(fromAmount) <= 0) return 'Enter an amount';
-    if ((parseFloat(fromAmount) + feeInToken) > fromBalance) return `Insufficient ${fromAsset} for swap + fee`;
-    return 'CONFIRM SWAP';
+    if (fromAsset === toAsset) return APP_MESSAGES.SWAP.ERROR_SAME_ASSET;
+    if (!fromAmount || parseFloat(fromAmount) <= 0) return APP_MESSAGES.SWAP.ERROR_NO_AMOUNT;
+    if ((parseFloat(fromAmount) + feeInToken) > fromBalance) return APP_MESSAGES.SWAP.ERROR_INSUFFICIENT_BALANCE(fromAsset);
+    return APP_MESSAGES.SWAP.BUTTON_CONFIRM;
   };
 
   // USD localized values for the UI price displays

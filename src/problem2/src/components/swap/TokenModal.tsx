@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Search, X} from 'lucide-react';
 import { cn } from '../../utils';
-import { ICON_BASE_URL } from '../../data/mock';
+import { ICON_BASE_URL, FALLBACK_TOKEN_ICON } from '../../common/constants';
+import { APP_MESSAGES } from '../../common/messages/text.messages';
 
 interface TokenModalProps {
   isOpen: boolean;
@@ -12,6 +13,11 @@ interface TokenModalProps {
   balances?: Record<string, number>;
 }
 
+/**
+ * TokenModal
+ * - Modal used to search and select tokens. Renders backdrop, header, search input, token list and empty state.
+ * - Keeps state minimal (search text) and delegates selection to parent.
+ */
 export const TokenModal = ({ isOpen, onClose, tokens, onSelect, selectedToken, balances = {} }: TokenModalProps) => {
   const [search, setSearch] = useState<string>('');
 
@@ -34,19 +40,21 @@ export const TokenModal = ({ isOpen, onClose, tokens, onSelect, selectedToken, b
         {/* Mobile Handle */}
         <div className="w-12 h-1.5 bg-brand-border/80 rounded-full mx-auto mt-4 mb-2 sm:hidden shrink-0" />
 
+        {/* Header */}
         <div className="p-5 sm:p-6 pb-4 border-b border-brand-border flex items-center justify-between shrink-0">
-          <h3 className="font-bold text-lg sm:text-2xl font-display tracking-tight text-white">Select Asset</h3>
+          <h3 className="font-bold text-lg sm:text-2xl font-display tracking-tight text-white">{APP_MESSAGES.TOKEN_MODAL.TITLE}</h3>
           <button onClick={onClose} className="p-2 hover:bg-brand-border/50 rounded-xl transition-colors hidden sm:block">
             <X className="w-5 h-5 text-white" />
           </button>
         </div>
 
+        {/* Search area */}
         <div className="p-4 shrink-0">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-primary" />
             <input
               autoFocus
-              placeholder="Search assets or address"
+              placeholder={APP_MESSAGES.TOKEN_MODAL.SEARCH_PLACEHOLDER}
               className="w-full bg-brand-border/20 border border-brand-border/40 rounded-2xl py-3 sm:py-4 pl-12 pr-4 text-sm sm:text-base focus:outline-none focus:border-brand-primary/50 focus:ring-1 focus:ring-brand-primary/20 transition-all placeholder:text-brand-secondary/60 text-white"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -54,6 +62,7 @@ export const TokenModal = ({ isOpen, onClose, tokens, onSelect, selectedToken, b
           </div>
         </div>
 
+        {/* Token list / Empty state */}
         <div className="flex-1 overflow-y-auto px-4 pb-8 custom-scrollbar">
           {filteredTokens.length > 0 ? (
             <div className="grid grid-cols-1 gap-1.5">
@@ -69,14 +78,16 @@ export const TokenModal = ({ isOpen, onClose, tokens, onSelect, selectedToken, b
                     selectedToken === token && "bg-brand-primary/10 border-brand-primary/30 shadow-sm shadow-brand-primary/5"
                   )}
                 >
+                  {/* Token Icon & Selection Badge */}
                   <div className="relative shrink-0">
                     <img
                       src={`${ICON_BASE_URL}/${token}.svg`}
                       alt={token}
                       className="w-12 h-12 rounded-full bg-brand-border/50 p-0.5"
                       onError={(e: React.SyntheticEvent<HTMLImageElement>) => { 
+                        // Fallback icon if specific token icon is missing
                         const target = e.target as HTMLImageElement;
-                        target.src = 'https://raw.githubusercontent.com/Switcheo/token-icons/main/tokens/SWTH.svg';
+                        target.src = FALLBACK_TOKEN_ICON;
                       }}
                     />
                     {selectedToken === token && (
@@ -85,22 +96,27 @@ export const TokenModal = ({ isOpen, onClose, tokens, onSelect, selectedToken, b
                       </div>
                     )}
                   </div>
+
+                  {/* Token Name & Network Info */}
                   <div className="flex-1 min-w-0">
                     <div className={cn(
                       "font-bold text-lg text-white group-hover:text-brand-primary transition-colors truncate",
                       selectedToken === token && "text-brand-primary font-black"
                     )}>{token}</div>
-                    <div className="text-xs text-brand-secondary font-bold uppercase tracking-widest opacity-80 group-hover:opacity-100 transition-opacity whitespace-nowrap">Integrated Network</div>
+                    <div className="text-xs text-brand-secondary font-bold uppercase tracking-widest opacity-80 group-hover:opacity-100 transition-opacity whitespace-nowrap">{APP_MESSAGES.TOKEN_MODAL.INTEGRATED_NETWORK}</div>
                   </div>
+
+                  {/* Wallet Balance Display */}
                   <div className="text-right shrink-0">
                     {balances[token] !== undefined ? (
                       <div className="flex flex-col items-end">
                         <div className="text-sm font-bold text-white tabular-nums">
                           {balances[token].toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 4 })}
                         </div>
-                        <div className="text-[10px] text-brand-secondary font-bold uppercase tracking-tighter opacity-60">Balance</div>
+                        <div className="text-[10px] text-brand-secondary font-bold uppercase tracking-tighter opacity-60">{APP_MESSAGES.TOKEN_MODAL.BALANCE_LABEL}</div>
                       </div>
                     ) : (
+                      // Fallback for tokens with no balance data
                       <div className="text-xs font-bold text-white/40">--</div>
                     )}
                   </div>
@@ -108,12 +124,13 @@ export const TokenModal = ({ isOpen, onClose, tokens, onSelect, selectedToken, b
               ))}
             </div>
           ) : (
+            /* Empty State: Shown when search filters out all tokens */
             <div className="py-20 text-center">
               <div className="w-16 h-16 bg-brand-border/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Search className="w-8 h-8 text-brand-secondary opacity-20" />
               </div>
               <p className="text-brand-secondary font-medium italic opacity-70">
-                No assets found for "{search}"
+                {APP_MESSAGES.TOKEN_MODAL.EMPTY_STATE(search)}
               </p>
             </div>
           )}

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import { MOCK_BALANCES } from '../data/mock';
+import { MOCK_BALANCES } from '../common/data';
 
 interface BalanceContextType {
   balances: Record<string, number>;

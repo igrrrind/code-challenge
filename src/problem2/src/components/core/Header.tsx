@@ -1,16 +1,24 @@
+/**
+ * Header
+ * - Top application bar containing title / brand and quick actions (notifications, account)
+ * - Keep this component small and presentational.
+ */
 import { Wallet, Bell } from 'lucide-react';
+import { APP_MESSAGES } from '../../common/messages/text.messages';
 
 export const Header = () => {
   return (
     <header className="flex items-center justify-between p-4 md:p-6 border-b border-brand-border sticky top-0 bg-brand-bg/80 backdrop-blur-lg z-20">
+      {/* Left: Brand / Title */}
       <div className="flex flex-col">
         <h1 className="text-xl font-bold font-display text-white lg:hidden flex items-center gap-2">
           <Wallet className="w-5 h-5 text-brand-primary" />
           Problem 2
         </h1>
-        <span className="text-sm font-medium text-brand-secondary hidden lg:block">Welcome back, 99Tech Customer!</span>
+        <span className="text-sm font-medium text-brand-secondary hidden lg:block">{APP_MESSAGES.HEADER.WELCOME}</span>
       </div>
 
+      {/* Right: Actions (notifications, account) */}
       <div className="flex items-center gap-3">
         <button className="p-2.5 rounded-xl bg-brand-border/50 border border-brand-border text-brand-secondary hover:text-white transition-colors relative">
           <Bell className="w-5 h-5" />
