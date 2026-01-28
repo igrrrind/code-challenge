@@ -1,12 +1,6 @@
 import { Loader2 } from 'lucide-react';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 import { APP_MESSAGES } from '../../common/messages/text.messages';
-
-// Utility: combine clsx + tailwind-merge for class composition
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import { cn } from '../../utils';
 
 /**
  * SwapButton

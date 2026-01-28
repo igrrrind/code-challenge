@@ -8,7 +8,7 @@ import { TokenModal } from './components/swap/TokenModal';
 import { LoadingScreen } from './components/LoadingScreen';
 import { TransactionToast } from './components/toast/TransactionToast';
 
-const App: React.FC = () => {
+const App = () => {
   const logic = useAppLogic();
   const { 
     loading, 
