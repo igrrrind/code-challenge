@@ -5,17 +5,11 @@ import { SWAP_CONFIG } from '../../common/config';
 import { APP_MESSAGES } from '../../common/messages/text.messages';
 import { useBalances } from '../../context/BalanceContext';
 
-/**
- * useAppLogic Hook
- * Centralizes the business logic for the Currency Swap interface.
- * 
- */
 export const useAppLogic = () => {
-  // External hooks for market data and wallet state
   const { prices, loading, error } = usePrices();
   const { balances, executeSwap } = useBalances();
 
-  // --- UI State Definitions ---
+
   const [fromAsset, setFromAsset] = useState<string>('ETH');
   const [toAsset, setToAsset] = useState<string>('USDC');
   const [fromAmount, setFromAmount] = useState<string>('');
@@ -25,8 +19,6 @@ export const useAppLogic = () => {
 
   const [isSwapping, setIsSwapping] = useState<boolean>(false);
   const [swapStatus, setSwapStatus] = useState<'success' | 'error' | null>(null);
-
-  // --- Derived Data & Calculations ---
   
   // Sorted list of available token names for the selection modal
   const tokenList = useMemo(() => prices.map(p => p.currency).sort(), [prices]);

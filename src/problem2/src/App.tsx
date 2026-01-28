@@ -1,8 +1,6 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Toaster, toast } from 'sonner';
 import { useAppLogic } from './hooks/seg/app.hook';
-
-// Components
 import { Sidebar } from './components/core/Sidebar';
 import { Header } from './components/core/Header';
 import { SwapInterface } from './components/swap/SwapInterface';

@@ -2,17 +2,9 @@ import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 
 import { API_CONFIG } from '../common/config';
 import { TOAST_MESSAGES } from '../common/messages/toast.messages';
 
-/**
- * Industry standard pattern for Axios with interceptors.
- * We define multiple clients for different purposes.
- */
-
 const setupInterceptors = (instance: AxiosInstance) => {
   instance.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-      // Add common headers, auth tokens etc here
-      // const token = localStorage.getItem('token');
-      // if (token) config.headers.Authorization = `Bearer ${token}`;
       return config;
     },
     (error) => Promise.reject(error)
@@ -21,7 +13,6 @@ const setupInterceptors = (instance: AxiosInstance) => {
   instance.interceptors.response.use(
     (response: AxiosResponse) => response,
     (error) => {
-      // handle global errors here
       const message = error.response?.data?.message || error.message || TOAST_MESSAGES.ERROR.GENERAL_DESC;
       console.error('[API Error]:', message);
       return Promise.reject(error);

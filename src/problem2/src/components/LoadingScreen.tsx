@@ -1,10 +1,5 @@
 import { APP_MESSAGES } from "../common/messages/text.messages";
 
-/**
- * LoadingScreen
- * - Full-screen loader used while wallet or price data is loading.
- * - Visual: spinner + small status text centered on screen.
- */
 export const LoadingScreen = () => {
   return (
     <div className="min-h-screen bg-brand-bg w-full flex flex-col items-center justify-center gap-4">
