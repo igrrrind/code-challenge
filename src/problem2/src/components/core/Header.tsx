@@ -1,7 +1,6 @@
-import React from 'react';
 import { Wallet, Bell } from 'lucide-react';
 
-export const Header: React.FC = () => {
+export const Header = () => {
   return (
     <header className="flex items-center justify-between p-4 md:p-6 border-b border-brand-border sticky top-0 bg-brand-bg/80 backdrop-blur-lg z-20">
       <div className="flex flex-col">

@@ -1,13 +1,7 @@
-import React, { useState } from 'react';
-import { Search, X, ChevronDown } from 'lucide-react';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-
-const ICON_BASE_URL = 'https://raw.githubusercontent.com/Switcheo/token-icons/main/tokens';
+import { useState } from 'react';
+import { Search, X} from 'lucide-react';
+import { cn } from '../../utils';
+import { ICON_BASE_URL } from '../../data/mock';
 
 interface TokenModalProps {
   isOpen: boolean;
@@ -18,7 +12,7 @@ interface TokenModalProps {
   balances?: Record<string, number>;
 }
 
-export const TokenModal: React.FC<TokenModalProps> = ({ isOpen, onClose, tokens, onSelect, selectedToken, balances = {} }) => {
+export const TokenModal = ({ isOpen, onClose, tokens, onSelect, selectedToken, balances = {} }: TokenModalProps) => {
   const [search, setSearch] = useState<string>('');
 
   if (!isOpen) return null;
@@ -128,33 +122,3 @@ export const TokenModal: React.FC<TokenModalProps> = ({ isOpen, onClose, tokens,
     </div>
   );
 };
-
-interface TokenSelectorProps {
-  asset: string;
-  onClick: () => void;
-  disabled?: boolean;
-}
-
-export const TokenSelector: React.FC<TokenSelectorProps> = ({ asset, onClick, disabled }) => (
-  <button
-    type="button"
-    onClick={onClick}
-    disabled={disabled}
-    className={cn(
-      "flex items-center gap-1.5 sm:gap-2 bg-brand-border/40 hover:bg-brand-border/60 transition-all border border-brand-border/60 px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl min-w-[80px] sm:min-w-[110px] shadow-sm group active:scale-95",
-      disabled && "opacity-50 cursor-not-allowed"
-    )}
-  >
-    <img
-      src={`${ICON_BASE_URL}/${asset}.svg`}
-      alt={asset}
-      className="w-4 h-4 sm:w-6 sm:h-6 rounded-full shadow-lg shrink-0"
-      onError={(e: React.SyntheticEvent<HTMLImageElement>) => { 
-        const target = e.target as HTMLImageElement;
-        target.src = 'https://raw.githubusercontent.com/Switcheo/token-icons/main/tokens/SWTH.svg';
-      }}
-    />
-    <span className="font-bold text-white text-xs sm:text-base group-hover:text-brand-primary transition-colors">{asset}</span>
-    <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-brand-secondary group-hover:text-brand-primary transition-colors shrink-0" />
-  </button>
-);

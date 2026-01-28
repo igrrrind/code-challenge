@@ -1,5 +1,4 @@
-import React from 'react';
-import { TokenSelector } from './TokenModal';
+import { TokenSelector } from "./TokenSelector";
 
 interface CurrencyInputProps {
   label: string;
@@ -16,7 +15,7 @@ interface CurrencyInputProps {
   onMaxClick?: () => void;
 }
 
-export const CurrencyInput: React.FC<CurrencyInputProps> = ({ 
+export const CurrencyInput = ({ 
   label, 
   amount, 
   onAmountChange, 
@@ -29,7 +28,7 @@ export const CurrencyInput: React.FC<CurrencyInputProps> = ({
   readOnly = false,
   disabled = false,
   onMaxClick
-}) => {
+}: CurrencyInputProps ) => {
   return (
     <div className="bg-brand-bg/40 border border-brand-border p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl focus-within:border-brand-primary/50 transition-all hover:border-brand-border/80">
       <div className="flex justify-between items-center mb-1.5 sm:mb-2 gap-2 h-5">

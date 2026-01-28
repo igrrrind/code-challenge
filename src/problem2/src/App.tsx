@@ -5,10 +5,10 @@ import { useAppLogic } from './hooks/seg/app.hook';
 // Components
 import { Sidebar } from './components/core/Sidebar';
 import { Header } from './components/core/Header';
-import { SwapInterface } from './components/SwapInterface';
-import { TokenModal } from './components/TokenModal';
+import { SwapInterface } from './components/swap/SwapInterface';
+import { TokenModal } from './components/swap/TokenModal';
 import { LoadingScreen } from './components/LoadingScreen';
-import { TransactionToast } from './components/TransactionToast';
+import { TransactionToast } from './components/toast/TransactionToast';
 
 const App: React.FC = () => {
   const logic = useAppLogic();

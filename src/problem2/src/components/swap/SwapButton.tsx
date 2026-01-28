@@ -1,4 +1,3 @@
-import React from 'react';
 import { Loader2 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -14,7 +13,7 @@ interface SwapButtonProps {
   text?: string;
 }
 
-export const SwapButton: React.FC<SwapButtonProps> = ({ loading, disabled, onClick, text = "CONFIRM SWAP" }) => {
+export const SwapButton = ({ loading, disabled, onClick, text = "CONFIRM SWAP" }:SwapButtonProps) => {
   return (
     <button
       type="submit"

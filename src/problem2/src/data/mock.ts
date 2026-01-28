@@ -11,6 +11,9 @@ export const MOCK_BALANCES: Record<string, number> = {
   'LUNA': 0.0,
 };
 
+export const ICON_BASE_URL = 'https://raw.githubusercontent.com/Switcheo/token-icons/main/tokens';
+
+
 export const SWAP_CONFIG = {
   DEFAULT_SLIPPAGE: '0.5%',
   BASE_GAS_FEE_USD: 2.45,

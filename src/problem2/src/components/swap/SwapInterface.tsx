@@ -1,9 +1,8 @@
-import React from 'react';
 import { ArrowDownUp, AlertCircle, Settings } from 'lucide-react';
 import { CurrencyInput } from './CurrencyInput';
 import { SwapButton } from './SwapButton';
-import { formatTokenAmount } from '../utils/formatters';
-import { SWAP_CONFIG } from '../data/mock';
+import { formatTokenAmount } from '../../utils/formatters';
+import { SWAP_CONFIG } from '../../data/mock';
 
 interface SwapInterfaceProps {
   fromAsset: string;
@@ -27,7 +26,7 @@ interface SwapInterfaceProps {
   onConfirmSwap: (e?: React.FormEvent) => void;
 }
 
-export const SwapInterface: React.FC<SwapInterfaceProps> = ({
+export const SwapInterface = ({
   fromAsset,
   toAsset,
   fromAmount,
@@ -47,7 +46,7 @@ export const SwapInterface: React.FC<SwapInterfaceProps> = ({
   handleSwapAssets,
   openModal,
   onConfirmSwap
-}) => {
+}: SwapInterfaceProps) => {
   return (
     <div className="bg-brand-border/20 backdrop-blur-2xl border border-brand-border/60 rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-8 shadow-2xl relative overflow-hidden group">
       <div className="flex justify-between items-center mb-6 sm:mb-8">

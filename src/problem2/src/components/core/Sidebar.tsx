@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Wallet, LayoutDashboard, ArrowDownUp, History, Settings } from 'lucide-react';
 import { DASHBOARD_STATS } from '../../data/mock';
 import { useBalances } from '../../context/BalanceContext';
 import { usePrices } from '../../hooks/usePrices';
 import { formatCurrency } from '../../utils/formatters';
 
-export const Sidebar: React.FC = () => {
+export const Sidebar = () => {
   const { balances } = useBalances();
   const { prices } = usePrices();
 
